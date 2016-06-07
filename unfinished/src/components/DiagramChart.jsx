@@ -919,6 +919,8 @@ var data = {
         }
 ] }
 
+var NODE_HEIGHT = 50;
+
 d3.sankey = function() {
   var sankey = {},
       nodeWidth = 24,
@@ -973,6 +975,7 @@ d3.sankey = function() {
  
   sankey.link = function() {
     var curvature = 0.8;
+    var halfNodeHeight = NODE_HEIGHT / 2;
  
     function link(d) {
       var x0 = d.source.x + d.source.dx,
@@ -980,8 +983,9 @@ d3.sankey = function() {
           xi = d3.interpolateNumber(x0, x1),
           x2 = xi(curvature),
           x3 = xi(1 - curvature),
-          y0 = d.source.y + d.sy + d.dy / 2,
-          y1 = d.target.y + d.ty + d.dy / 2;
+          y0 = d.source.y + d.sy/2 + halfNodeHeight,
+          y1 = d.target.y + d.ty/2 + halfNodeHeight;
+        console.log("Data", d.sy, d.dy);
       return "M" + x0 + "," + y0
            + "C" + x2 + "," + y0
            + " " + x3 + "," + y1
@@ -1098,7 +1102,7 @@ d3.sankey = function() {
       nodesByBreadth.forEach(function(nodes) {
         nodes.forEach(function(node, i) {
           node.y = i;
-          node.dy = 50;
+          node.dy = NODE_HEIGHT;
         });
       });
  
@@ -1271,7 +1275,6 @@ export default class DiagramChart extends React.Component {
         .attr("d", path)
         .style("stroke-width", 2) //function(d) { return Math.max(1, d.dy)+2; })
         .style("stroke", function(d) {
-            console.log("jankiel", d);
             return "blue";
         })
         .sort(function(a, b) { return b.dy - a.dy; });
@@ -1337,14 +1340,16 @@ export default class DiagramChart extends React.Component {
   // add in the title for the nodes
     node.append("text")
         .attr("x", -6)
-        .attr("y", function(d) { return d.dy / 2; })
+        .attr("y", function(d) { return d.dy / 4; })
         .attr("dy", ".35em")
         .attr("text-anchor", "end")
         .attr("transform", null)
         .text(function(d) { return d.name; })
       .filter(function(d) { return d.x < width / 2; })
         .attr("x", 6 + sankey.nodeWidth())
-        .attr("text-anchor", "start");
+        .attr("text-anchor", "start")
+        .filter(function(d) { return d.name == "Data Usage";})
+        .attr("y", 0);
    
   // the function for moving the nodes
     function dragmove(d) {
