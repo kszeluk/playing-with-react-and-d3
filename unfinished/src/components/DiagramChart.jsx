@@ -985,7 +985,6 @@ d3.sankey = function() {
           x3 = xi(1 - curvature),
           y0 = d.source.y + d.sy/2 + halfNodeHeight,
           y1 = d.target.y + d.ty/2 + halfNodeHeight;
-        console.log("Data", d.sy, d.dy);
       return "M" + x0 + "," + y0
            + "C" + x2 + "," + y0
            + " " + x3 + "," + y1
