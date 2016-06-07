@@ -1,0 +1,11 @@
+# Mac OS X
+.DS_STORE
+
+# IntelliJ
+.idea/
+
+# Logs
+*.log
+
+# NPM
+**/node_modules/
