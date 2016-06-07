@@ -1218,7 +1218,7 @@ export default class DiagramChart extends React.Component {
      
     var margin = {top: 10, right: 10, bottom: 10, left: 10},
         width = 1200 - margin.left - margin.right,
-        height = 740 - margin.top - margin.bottom;
+        height = 2000 - margin.top - margin.bottom;
      
     var formatNumber = d3.format(",.0f"),    // zero decimal places
         format = function(d) { return formatNumber(d) + " " + units; },
