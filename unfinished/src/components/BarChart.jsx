@@ -5,7 +5,7 @@ export default class BarChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      datasetLength: 100
+      datasetLength: 13
     };
   }
 
@@ -45,7 +45,7 @@ export default class BarChart extends React.Component {
 
     // Scaling variables
     var maxValue = d3.max(dataset);
-    var colors = ["tomato", "steelblue"];
+    var colors = ["#bbb84e", "#4d525f"];
 
     // Scaling to fit data in the SVG
     var yScale = d3.scale.linear().domain([0, maxValue * 1.1]).range([0, h]);
@@ -73,7 +73,7 @@ export default class BarChart extends React.Component {
         <h2>Bar-chart</h2>
         <div className="controls">
           <button onClick={this.randomizeData.bind(this)}>Randomize Dataset</button>
-          <input type="number" onChange={this.changeDatasetSize.bind(this)} defaultValue={100} />
+          <input type="number" onChange={this.changeDatasetSize.bind(this)} defaultValue={this.state.datasetLength} />
         </div>
       </div>
     );
