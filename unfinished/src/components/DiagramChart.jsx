@@ -919,6 +919,8 @@ var data = {
         }
 ] }
 
+var NODE_HEIGHT = 50;
+
 d3.sankey = function() {
   var sankey = {},
       nodeWidth = 24,
@@ -973,6 +975,7 @@ d3.sankey = function() {
  
   sankey.link = function() {
     var curvature = 0.8;
+    var halfNodeHeight = NODE_HEIGHT / 2;
  
     function link(d) {
       var x0 = d.source.x + d.source.dx,
@@ -980,8 +983,8 @@ d3.sankey = function() {
           xi = d3.interpolateNumber(x0, x1),
           x2 = xi(curvature),
           x3 = xi(1 - curvature),
-          y0 = d.source.y + d.sy + d.dy / 2,
-          y1 = d.target.y + d.ty + d.dy / 2;
+          y0 = d.source.y + d.sy/2 + halfNodeHeight,
+          y1 = d.target.y + d.ty/2 + halfNodeHeight;
       return "M" + x0 + "," + y0
            + "C" + x2 + "," + y0
            + " " + x3 + "," + y1
@@ -1098,7 +1101,7 @@ d3.sankey = function() {
       nodesByBreadth.forEach(function(nodes) {
         nodes.forEach(function(node, i) {
           node.y = i;
-          node.dy = 50;
+          node.dy = NODE_HEIGHT;
         });
       });
  
@@ -1266,15 +1269,35 @@ export default class DiagramChart extends React.Component {
   // add in the links
     var link = svg.append("g").selectAll(".link")
         .data(data.links)
-      .enter().append("path")
+        .enter().append("path")
         .attr("class", "link")
         .attr("d", path)
-        .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+        .style("stroke-width", 2) //function(d) { return Math.max(1, d.dy)+2; })
+        .style("stroke", function(d) {
+            return "blue";
+        })
         .sort(function(a, b) { return b.dy - a.dy; });
    
   // add the link titles
     link.append("text").text(function(d) {return d.originalLabel;});
-   
+
+
+      var highlightConnected = function(g) {
+          link.filter(function (d) { return d.source === g || d.target === g; })
+              .style("stroke", "red");
+      };
+
+      var fadeUnconnected = function(g) {
+          link.filter(function (d) { return d.source !== g && d.target !== g; })
+              .style("stroke", "blue");
+      };
+
+      var fadeConnected = function(g) {
+          link.filter(function (d) { return d.source === g || d.target === g; })
+              .style("stroke", "blue");
+      };
+
+
   // add in the nodes
     var node = svg.append("g").selectAll(".node")
         .data(data.nodes)
@@ -1286,7 +1309,33 @@ export default class DiagramChart extends React.Component {
         .origin(function(d) { return d; })
         .on("dragstart", function() { 
         this.parentNode.appendChild(this); })
-        .on("drag", dragmove));
+
+        .on("drag", dragmove)
+      );
+
+
+
+      node.on("mouseenter", function(node) {
+          highlightConnected(node);
+          fadeUnconnected(node);
+      });
+
+      node.on("mouseleave", function(node) {
+          fadeConnected(node);
+      });
+
+      node.on("mousedown", function(g) {
+          link.filter(function (d) { return d.source !== g && d.target !== g; })
+              .transition()
+              .duration(400)
+              .style("opacity", 0.05);
+      });
+
+      node.on("mouseup", function(g) {
+          link.transition()
+              .duration(400)
+              .style("opacity", 1);
+      });
    
   // add the rectangles for the nodes
     node.append("rect")
@@ -1303,14 +1352,16 @@ export default class DiagramChart extends React.Component {
   // add in the title for the nodes
     node.append("text")
         .attr("x", -6)
-        .attr("y", function(d) { return d.dy / 2; })
+        .attr("y", function(d) { return d.dy / 4; })
         .attr("dy", ".35em")
         .attr("text-anchor", "end")
         .attr("transform", null)
         .text(function(d) { return d.name; })
       .filter(function(d) { return d.x < width / 2; })
         .attr("x", 6 + sankey.nodeWidth())
-        .attr("text-anchor", "start");
+        .attr("text-anchor", "start")
+        .filter(function(d) { return d.name == "Data Usage";})
+        .attr("y", 0);
    
   // the function for moving the nodes
     function dragmove(d) {
