@@ -1277,7 +1277,7 @@ export default class DiagramChart extends React.Component {
         .sort(function(a, b) { return b.dy - a.dy; });
    
   // add the link titles
-    link.append("text").text(function(d) {console.log(d); return d.originalLabel;});
+    link.append("text").text(function(d) {return d.originalLabel;});
 
 
       var highlightConnected = function(g) {
@@ -1348,7 +1348,6 @@ export default class DiagramChart extends React.Component {
    
   // the function for moving the nodes
     function dragmove(d) {
-        console.log("Moved ", d);
       d3.select(this).attr("transform", 
           "translate(" + (
                d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))

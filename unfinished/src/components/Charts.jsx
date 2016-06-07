@@ -7,7 +7,7 @@ export default class Charts extends React.Component {
     return (
       <div>
         <h1>D3.js combined with React.js</h1>
-        <BarChart />
+        <BarChart width={1200} height={400} />
         <DiagramChart />
       </div>
     );
