@@ -1,5 +1,6 @@
 import React from "react";
 import BarChart from "./BarChart";
+import PieChart from "./PieChart";
 import DiagramChart from "./DiagramChart";
 
 export default class Charts extends React.Component {
@@ -7,7 +8,8 @@ export default class Charts extends React.Component {
     return (
       <div>
         <h1>D3.js combined with React.js</h1>
-        <BarChart width={1200} height={400} />
+        <BarChart width={1200} height={200} />
+        <PieChart width={400} height={400} />
         <DiagramChart />
       </div>
     );

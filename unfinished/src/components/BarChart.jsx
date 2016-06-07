@@ -1,13 +1,7 @@
 import React from 'react';
 import d3 from "d3";
 
-// Generate random dataset
-
-// A function that returns a random number from 0 to 1000
-
-// A function that creates an array of 50 elements of (x, y) coordinates.
-
-export default class Barchart extends React.Component {
+export default class BarChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
