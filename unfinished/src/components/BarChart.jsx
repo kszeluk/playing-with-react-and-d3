@@ -51,7 +51,7 @@ export default class Barchart extends React.Component {
 
     // Scaling variables
     var maxValue = d3.max(dataset);
-    var colors = ["lightsalmon", "lightsteelblue"];
+    var colors = ["tomato", "steelblue"];
 
     // Scaling to fit data in the SVG
     var yScale = d3.scale.linear().domain([0, maxValue * 1.1]).range([0, h]);
@@ -76,6 +76,7 @@ export default class Barchart extends React.Component {
   render() {
     return (
       <div id="bar-chart">
+        <h2>Bar-chart</h2>
         <button onClick={this.randomizeData.bind(this)}>Randomize Dataset</button>
         <input type="number" onChange={this.changeDatasetSize.bind(this)} defaultValue={100} />
       </div>
