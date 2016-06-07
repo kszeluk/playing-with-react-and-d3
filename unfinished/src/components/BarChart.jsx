@@ -77,8 +77,10 @@ export default class Barchart extends React.Component {
     return (
       <div id="bar-chart">
         <h2>Bar-chart</h2>
-        <button onClick={this.randomizeData.bind(this)}>Randomize Dataset</button>
-        <input type="number" onChange={this.changeDatasetSize.bind(this)} defaultValue={100} />
+        <div className="controls">
+          <button onClick={this.randomizeData.bind(this)}>Randomize Dataset</button>
+          <input type="number" onChange={this.changeDatasetSize.bind(this)} defaultValue={100} />
+        </div>
       </div>
     );
   }
