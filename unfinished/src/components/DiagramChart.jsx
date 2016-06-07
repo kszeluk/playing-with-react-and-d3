@@ -1266,15 +1266,36 @@ export default class DiagramChart extends React.Component {
   // add in the links
     var link = svg.append("g").selectAll(".link")
         .data(data.links)
-      .enter().append("path")
+        .enter().append("path")
         .attr("class", "link")
         .attr("d", path)
-        .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+        .style("stroke-width", 2) //function(d) { return Math.max(1, d.dy)+2; })
+        .style("stroke", function(d) {
+            console.log("jankiel", d);
+            return "blue";
+        })
         .sort(function(a, b) { return b.dy - a.dy; });
    
   // add the link titles
     link.append("text").text(function(d) {console.log(d); return d.originalLabel;});
-   
+
+
+      var highlightConnected = function(g) {
+          link.filter(function (d) { return d.source === g || d.target === g; })
+              .style("stroke", "red");
+      };
+
+      var fadeUnconnected = function(g) {
+          link.filter(function (d) { return d.source !== g && d.target !== g; })
+              .style("stroke", "blue");
+      };
+
+      var fadeConnected = function(g) {
+          link.filter(function (d) { return d.source === g || d.target === g; })
+              .style("stroke", "blue");
+      };
+
+
   // add in the nodes
     var node = svg.append("g").selectAll(".node")
         .data(data.nodes)
@@ -1286,7 +1307,20 @@ export default class DiagramChart extends React.Component {
         .origin(function(d) { return d; })
         .on("dragstart", function() { 
         this.parentNode.appendChild(this); })
-        .on("drag", dragmove));
+
+        .on("drag", dragmove)
+      );
+
+
+
+      node.on("mouseenter", function(node) {
+          highlightConnected(node);
+          fadeUnconnected(node);
+      });
+
+      node.on("mouseleave", function(node) {
+          fadeConnected(node);
+      });
    
   // add the rectangles for the nodes
     node.append("rect")
@@ -1314,6 +1348,7 @@ export default class DiagramChart extends React.Component {
    
   // the function for moving the nodes
     function dragmove(d) {
+        console.log("Moved ", d);
       d3.select(this).attr("transform", 
           "translate(" + (
                d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
