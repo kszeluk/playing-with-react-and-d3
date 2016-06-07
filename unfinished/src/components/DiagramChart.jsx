@@ -1324,18 +1324,43 @@ export default class DiagramChart extends React.Component {
           fadeConnected(node);
       });
 
-      node.on("mousedown", function(g) {
+      // var hideLinks = function
+
+      var hideLinks = function(g) {
           link.filter(function (d) { return d.source !== g && d.target !== g; })
               .transition()
               .duration(400)
               .style("opacity", 0.05);
-      });
+      };
+
+      node.on("mousedown", hideLinks);
 
       node.on("mouseup", function(g) {
           link.transition()
               .duration(400)
               .style("opacity", 1);
       });
+
+      node.on("dblclick", function(g) {
+          if (!node.clicked) {
+              node.clicked = false;
+          }
+          node.clicked = !node.clicked;
+
+          link.forEach(function(d) {
+              if (d.source === g) {
+                  d.source.clicked = node.clicked;
+              }
+              else if (d.target === g) {
+                  d.target.clicked = node.clicked;
+              }
+          });
+
+          if (node.clicked)
+            hideLinks(g);
+      });
+
+
    
   // add the rectangles for the nodes
     node.append("rect")
