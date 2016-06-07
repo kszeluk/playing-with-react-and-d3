@@ -1323,6 +1323,19 @@ export default class DiagramChart extends React.Component {
       node.on("mouseleave", function(node) {
           fadeConnected(node);
       });
+
+      node.on("mousedown", function(g) {
+          link.filter(function (d) { return d.source !== g && d.target !== g; })
+              .transition()
+              .duration(400)
+              .style("opacity", 0.05);
+      });
+
+      node.on("mouseup", function(g) {
+          link.transition()
+              .duration(400)
+              .style("opacity", 1);
+      });
    
   // add the rectangles for the nodes
     node.append("rect")
