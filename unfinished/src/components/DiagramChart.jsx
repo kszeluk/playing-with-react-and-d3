@@ -1273,7 +1273,7 @@ export default class DiagramChart extends React.Component {
         .sort(function(a, b) { return b.dy - a.dy; });
    
   // add the link titles
-    link.append("text").text(function(d) {console.log(d); return d.originalLabel;});
+    link.append("text").text(function(d) {return d.originalLabel;});
    
   // add in the nodes
     var node = svg.append("g").selectAll(".node")
