@@ -6,12 +6,11 @@ export default class PieChart extends React.Component {
     super(props);
     this.state = {
       data: [
-        {"label":"A", "value":10},
+        {"label":"A", "value":20},
         {"label":"B", "value":20},
-        {"label":"C", "value":30},
-        {"label":"D", "value":40},
-        {"label":"E", "value":30},
-        {"label":"F", "value":40}
+        {"label":"C", "value":20},
+        {"label":"D", "value":20},
+        {"label":"E", "value":20}
       ]
     };
   }
@@ -27,15 +26,6 @@ export default class PieChart extends React.Component {
   componentWillUpdate() {
     this.removePieChart();
     this.renderPieChart(this.state.data);
-  };
-
-  changeDataName(index, e) {
-    var prevData = this.state.data;
-    prevData[index].label = e.target.value;
-
-    this.setState({
-      data: prevData
-    });
   };
 
   changeDataValue(index, e) {
@@ -55,7 +45,7 @@ export default class PieChart extends React.Component {
     var w = this.props.width;
     var h = this.props.height;
     var r = h/2;
-    var color = d3.scale.category20c();
+    var color = d3.scale.ordinal().range(["#e9ab25", "#bbb84e", "#d2482e", "#78aea9", "#4d525f"]);
 
     var svg = d3.select('#pie-chart').append("svg").data([dataset])
       .attr({
@@ -99,22 +89,21 @@ export default class PieChart extends React.Component {
       })
       .attr("text-anchor", "middle")
       .text( function(d, i) {
-        return dataset[i].label;
-      });
+        return dataset[i].value;
+      }).attr({fill: "white"});
   }
 
   render() {
     var dataPointEdits = this.state.data.map((dataPoint, index) => {
-      return <div key={index}>
-        <input type="text" defaultValue={dataPoint.label} onChange={this.changeDataName.bind(this, index)} />
-        <input type="number" defaultValue={dataPoint.value} onChange={this.changeDataValue.bind(this, index)} />
-      </div>
+      return <input key={index} type="number" defaultValue={dataPoint.value} onChange={this.changeDataValue.bind(this, index)} />
     });
 
     return (
       <div id="pie-chart">
         <h2>Pie-chart</h2>
-        {dataPointEdits}
+        <div className="input-div" >
+          {dataPointEdits}
+        </div>
       </div>
     );
   }

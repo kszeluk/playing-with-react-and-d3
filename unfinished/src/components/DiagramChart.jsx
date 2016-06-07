@@ -1381,6 +1381,8 @@ export default class DiagramChart extends React.Component {
   }
 
   render() {
-    return <div id="diagramChart"></div>;
+    return <div id="diagramChart">
+      <h2>An example of how we could use it</h2>
+    </div>;
   }
 }
